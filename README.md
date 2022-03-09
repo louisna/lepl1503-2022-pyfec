@@ -20,5 +20,5 @@ python3 make_input.py input_txt/africa.txt input_binary/africa.bin -b 50 -w 100 
 You may run the program with
 
 ```bash
-python3 fec.py input_binary/ -f output.txt
+python3 main.py input_binary/ -f output.txt
 ```
