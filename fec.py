@@ -314,7 +314,7 @@ if __name__ == "__main__":
                 print(filename, file=output_fd)
             else:
                 output_fd.write(filename.encode("ASCII"))
-                output_fd.write("\n".encode("ASCII"))
+                output_fd.write(0x1e.to_bytes(1, "big"))
 
             # Contient le nombre de blocs complets (sans le dernier bloc s'il n'est pas complet)
             nb_blocks = math.ceil(length / (word_size * (block_size + redundancy)))
@@ -351,6 +351,6 @@ if __name__ == "__main__":
             
             # Séparation avec le fichier suivant
             if output_fd == sys.stdout or output_fd == sys.stderr:
-                print("\n", file=output_fd)
+                print(chr(0x1f), file=output_fd)
             else:
-                output_fd.write("\n\n".encode("ASCII"))
+                output_fd.write(0x1f.to_bytes(1, "big"))
