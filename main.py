@@ -309,12 +309,16 @@ if __name__ == "__main__":
             step = word_size * (block_size + redundancy)  # Taille de bloc en bytes 
             length = len(binary_data)
 
+            # Ecrit la taille du titre et du contenu du message
             # Ecrit le nom du fichier dans l'output
             if output_fd == sys.stdout or output_fd == sys.stderr:
-                print(filename, file=output_fd)
+                print(len(filename), end="")
+                print(message_size, end="")
+                print(filename, file=output_fd, end="")
             else:
+                output_fd.write(len(filename).to_bytes(4, "big"))
+                output_fd.write(message_size.to_bytes(8, "big"))
                 output_fd.write(filename.encode("ASCII"))
-                output_fd.write(0x1e.to_bytes(1, "big"))
 
             # Contient le nombre de blocs complets (sans le dernier bloc s'il n'est pas complet)
             nb_blocks = math.ceil(length / (word_size * (block_size + redundancy)))
@@ -348,9 +352,3 @@ if __name__ == "__main__":
                     print(last_block)
                 
                 write_last_block(output_fd, decoded, nb_remaining_symbols, word_size, true_length_last_symbol)
-            
-            # Séparation avec le fichier suivant
-            if output_fd == sys.stdout or output_fd == sys.stderr:
-                print(chr(0x1f), file=output_fd)
-            else:
-                output_fd.write(0x1f.to_bytes(1, "big"))
